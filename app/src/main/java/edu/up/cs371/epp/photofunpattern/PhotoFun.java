@@ -124,6 +124,8 @@ public class PhotoFun extends AppCompatActivity {
     }
     private class imageTouchListener implements View.OnTouchListener {
         private Paint myPaint;
+        private int myLastX;
+        private int myLastY;
 
         public imageTouchListener () {
             super();
@@ -134,15 +136,42 @@ public class PhotoFun extends AppCompatActivity {
         }
 
         private void startLine (SurfaceView surfaceView, int x, int y) {
-            //surfaceView.setWillNotDraw(false);
+            if (myNewBmp == null) return;
+
+            //update the new bitmap
+            Canvas canvas = new Canvas(myNewBmp);
+            canvas.drawPoint (x, y, myPaint);
+            //canvas.drawLine(x-30, y-30, x+30, y+30, myPaint);
+
+            //draw it to the surface
             SurfaceHolder holder = surfaceView.getHolder();
             Surface surface = holder.getSurface();
-            Canvas canvas = surface.lockCanvas(null);
+            canvas = surface.lockCanvas(null);
             canvas.drawBitmap(myNewBmp, 0, 0, null);
-            canvas.drawLine(x-30, y-30, x+30, y+30, myPaint);
             surface.unlockCanvasAndPost(canvas);
+
+            myLastX = x;
+            myLastY = y;
         }
 
+        private void lineSegment (SurfaceView surfaceView, int x, int y) {
+            if (myNewBmp == null) return;
+
+            //update the new bitmap
+            Canvas canvas = new Canvas(myNewBmp);
+            canvas.drawLine (myLastX, myLastY, x, y, myPaint);
+            //canvas.drawLine(x-30, y-30, x+30, y+30, myPaint);
+
+            //draw it to the surface
+            SurfaceHolder holder = surfaceView.getHolder();
+            Surface surface = holder.getSurface();
+            canvas = surface.lockCanvas(null);
+            canvas.drawBitmap(myNewBmp, 0, 0, null);
+            surface.unlockCanvasAndPost(canvas);
+
+            myLastX = x;
+            myLastY = y;
+        }
         public boolean onTouch(View view, MotionEvent event){
             SurfaceView surfaceView = (SurfaceView)view;
             int x = (int)event.getX();
@@ -152,15 +181,16 @@ public class PhotoFun extends AppCompatActivity {
             switch (eventAction) {
                 case MotionEvent.ACTION_DOWN: {
                     startLine (surfaceView, x, y);
-                    Log.i("OnTouch", "down at x:" + x + ", y:" + y);
+                    //Log.i("OnTouch", "down at x:" + x + ", y:" + y);
                     break;
                 }
                 case MotionEvent.ACTION_MOVE: {
-                    Log.i("OnTouch", "move to x:" + x + ", y:" + y);
+                    lineSegment (surfaceView, x, y);
+                    //Log.i("OnTouch", "move to x:" + x + ", y:" + y);
                     break;
                 }
                 case MotionEvent.ACTION_UP: {
-                    Log.i("OnTouch", "  up at x:" + x + ", y:" + y);
+                    //Log.i("OnTouch", "  up at x:" + x + ", y:" + y);
                     break;
                 }
             }
