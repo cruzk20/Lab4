@@ -113,7 +113,22 @@ public class PhotoFun extends AppCompatActivity implements SurfaceHolder.Callbac
         public boolean onTouch(View canvas, MotionEvent event){
             int x = (int)event.getRawX();
             int y = (int)event.getRawY();
-            Log.i("OnTouch", "x:"+x+", y:"+y);
+            int eventAction = event.getAction();
+
+            switch (eventAction) {
+                case MotionEvent.ACTION_DOWN: {
+                    Log.i("OnTouch", "down at x:" + x + ", y:" + y);
+                    break;
+                }
+                case MotionEvent.ACTION_MOVE: {
+                    Log.i("OnTouch", "move to x:" + x + ", y:" + y);
+                    break;
+                }
+                case MotionEvent.ACTION_UP: {
+                    Log.i("OnTouch", "  up at x:" + x + ", y:" + y);
+                    break;
+                }
+            }
            return true;
         }
     }
