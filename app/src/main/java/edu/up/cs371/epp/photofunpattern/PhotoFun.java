@@ -4,6 +4,8 @@ import android.support.v7.app.AppCompatActivity;
         import android.os.Bundle;
         import android.graphics.Bitmap;
         import android.graphics.drawable.BitmapDrawable;
+        import android.graphics.Paint;
+        import android.graphics.Color;
         import android.widget.ImageView;
         import android.view.SurfaceView;
         import android.graphics.Canvas;
@@ -28,7 +30,7 @@ public class PhotoFun extends AppCompatActivity {
     private Bitmap myOriginalBmp;
     private ImageView myNewImageView;
     private SurfaceView myNewSurfaceView;
-    private Surface mySurface;
+    //private Surface mySurface;
     //private Canvas myCanvas;
 
     /*
@@ -64,7 +66,6 @@ public class PhotoFun extends AppCompatActivity {
                 (Button) findViewById(R.id.brightnessFilterButton);
         brightnessFilterButton.setOnClickListener
                 (new brightnessFilterButtonListener());
-        Log.i("OnCreate", "done");
     }
 
     /*
@@ -94,10 +95,10 @@ public class PhotoFun extends AppCompatActivity {
     private class HolderCallback implements SurfaceHolder.Callback {
         @Override
         public void surfaceCreated(SurfaceHolder holder) {
-            mySurface = holder.getSurface();
-            Canvas canvas = mySurface.lockCanvas(null);
+            Surface surface = holder.getSurface();
+            Canvas canvas = surface.lockCanvas(null);
             canvas.drawBitmap(myOriginalBmp, 0, 0, null);
-            mySurface.unlockCanvasAndPost(canvas);
+            surface.unlockCanvasAndPost(canvas);
 
         }
 
@@ -112,13 +113,30 @@ public class PhotoFun extends AppCompatActivity {
         }
     }
     private class imageTouchListener implements View.OnTouchListener {
-        public boolean onTouch(View canvas, MotionEvent event){
-            int x = (int)event.getRawX();
-            int y = (int)event.getRawY();
+
+        private void startLine (SurfaceView surfaceView, int x, int y) {
+            //surfaceView.setWillNotDraw(false);
+            Paint paint = new Paint();
+            paint.setColor(Color.RED);
+            paint.setStrokeWidth(20);
+            paint.setStrokeCap(Paint.Cap.ROUND);
+            SurfaceHolder holder = surfaceView.getHolder();
+            Surface surface = holder.getSurface();
+            Canvas canvas = surface.lockCanvas(null);
+            canvas.drawBitmap(myOriginalBmp, 0, 0, null);
+            canvas.drawLine(x-30, y-30, x+30, y+30, paint);
+            surface.unlockCanvasAndPost(canvas);
+        }
+
+        public boolean onTouch(View view, MotionEvent event){
+            SurfaceView surfaceView = (SurfaceView)view;
+            int x = (int)event.getX();
+            int y = (int)event.getY();
             int eventAction = event.getAction();
 
             switch (eventAction) {
                 case MotionEvent.ACTION_DOWN: {
+                    startLine (surfaceView, x, y);
                     Log.i("OnTouch", "down at x:" + x + ", y:" + y);
                     break;
                 }
