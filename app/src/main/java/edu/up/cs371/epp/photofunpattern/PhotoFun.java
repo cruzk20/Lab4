@@ -22,7 +22,7 @@ import android.support.v7.app.AppCompatActivity;
  *   https://github.com/edcepp/PhotoFunPattern
  */
 
-public class PhotoFun extends AppCompatActivity implements SurfaceHolder.Callback {
+public class PhotoFun extends AppCompatActivity {
 
     // Image resources
     private Bitmap myOriginalBmp;
@@ -38,24 +38,6 @@ public class PhotoFun extends AppCompatActivity implements SurfaceHolder.Callbac
     * @param savedInstanceState Required by parent object
     */
 
-    @Override
-    public void surfaceCreated(SurfaceHolder holder){
-        mySurface = holder.getSurface();
-        Canvas canvas = mySurface.lockCanvas(null);
-        canvas.drawBitmap(myOriginalBmp,0, 0, null);
-        mySurface.unlockCanvasAndPost(canvas);
-
-    }
-
-    @Override
-    public void surfaceChanged (SurfaceHolder holder, int format, int width, int height){
-
-    }
-
-    @Override
-    public void surfaceDestroyed (SurfaceHolder holder){
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +54,7 @@ public class PhotoFun extends AppCompatActivity implements SurfaceHolder.Callbac
 
         myNewSurfaceView = (SurfaceView) findViewById(R.id.newSurface);
         SurfaceHolder holder = myNewSurfaceView.getHolder();
-        holder.addCallback(this);
+        holder.addCallback(new HolderCallback());
         myNewSurfaceView.setOnTouchListener(new imageTouchListener());
 
         Button grayFilterButton =
@@ -109,6 +91,26 @@ public class PhotoFun extends AppCompatActivity implements SurfaceHolder.Callbac
         }
     }
 
+    private class HolderCallback implements SurfaceHolder.Callback {
+        @Override
+        public void surfaceCreated(SurfaceHolder holder) {
+            mySurface = holder.getSurface();
+            Canvas canvas = mySurface.lockCanvas(null);
+            canvas.drawBitmap(myOriginalBmp, 0, 0, null);
+            mySurface.unlockCanvasAndPost(canvas);
+
+        }
+
+        @Override
+        public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+
+        }
+
+        @Override
+        public void surfaceDestroyed(SurfaceHolder holder) {
+
+        }
+    }
     private class imageTouchListener implements View.OnTouchListener {
         public boolean onTouch(View canvas, MotionEvent event){
             int x = (int)event.getRawX();
