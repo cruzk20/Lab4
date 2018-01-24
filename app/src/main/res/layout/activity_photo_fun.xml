@@ -23,15 +23,6 @@
             app:srcCompat="@drawable/olivia_small"
             android:layout_weight="1" />
 
-        <ImageView
-            android:id="@+id/newImage"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            app:srcCompat="@drawable/blank"
-            android:layout_weight="1" />
-
         <SurfaceView
             android:id="@+id/newSurface"
             android:layout_width="0dp"

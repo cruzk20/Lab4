@@ -28,10 +28,8 @@ public class PhotoFun extends AppCompatActivity {
 
     // Image resources
     private Bitmap myOriginalBmp;
-    private ImageView myNewImageView;
     private SurfaceView myNewSurfaceView;
-    //private Surface mySurface;
-    //private Canvas myCanvas;
+    private Bitmap myNewBmp;
 
     /*
     * onCreate This constructor lays out the user interface, initializes the
@@ -52,12 +50,14 @@ public class PhotoFun extends AppCompatActivity {
                 (BitmapDrawable) originalImageView.getDrawable();
         myOriginalBmp = originalDrawableBmp.getBitmap();
 
-        myNewImageView = (ImageView) findViewById(R.id.newImage);
-
         myNewSurfaceView = (SurfaceView) findViewById(R.id.newSurface);
         SurfaceHolder holder = myNewSurfaceView.getHolder();
         holder.addCallback(new HolderCallback());
         myNewSurfaceView.setOnTouchListener(new imageTouchListener());
+        //myNewBmp = myOriginalBmp;   // TBD something different
+        myNewBmp = Bitmap.createBitmap(myOriginalBmp.getWidth(), myOriginalBmp.getHeight(),
+                myOriginalBmp.getConfig());
+        myNewBmp.eraseColor(Color.WHITE);
 
         Button grayFilterButton =
                 (Button) findViewById(R.id.grayFilterButton);
@@ -68,6 +68,16 @@ public class PhotoFun extends AppCompatActivity {
                 (new brightnessFilterButtonListener());
     }
 
+    private void setSurfaceViewBitmap (Bitmap inBmp){
+        myNewBmp = inBmp;
+        SurfaceHolder holder = myNewSurfaceView.getHolder();
+        Surface surface = holder.getSurface();
+        Canvas canvas = surface.lockCanvas(null);
+        canvas.drawBitmap(inBmp, 0, 0, null);
+        surface.unlockCanvasAndPost(canvas);
+
+    }
+
     /*
     * class grayFilterButtonListener this inner class defines the action for
     * the gray filter button.
@@ -75,7 +85,7 @@ public class PhotoFun extends AppCompatActivity {
     private class grayFilterButtonListener implements View.OnClickListener {
         public void onClick(View button) {
             GrayFilter filter = new GrayFilter();
-            myNewImageView.setImageBitmap(filter.apply(myOriginalBmp));
+            setSurfaceViewBitmap (filter.apply(myOriginalBmp));
         }
     }
 
@@ -88,7 +98,7 @@ public class PhotoFun extends AppCompatActivity {
             implements View.OnClickListener {
         public void onClick(View button) {
             BrightnessFilter filter = new BrightnessFilter();
-            myNewImageView.setImageBitmap(filter.apply(myOriginalBmp));
+            setSurfaceViewBitmap(filter.apply(myOriginalBmp));
         }
     }
 
@@ -97,7 +107,7 @@ public class PhotoFun extends AppCompatActivity {
         public void surfaceCreated(SurfaceHolder holder) {
             Surface surface = holder.getSurface();
             Canvas canvas = surface.lockCanvas(null);
-            canvas.drawBitmap(myOriginalBmp, 0, 0, null);
+            canvas.drawBitmap(myNewBmp, 0, 0, null);
             surface.unlockCanvasAndPost(canvas);
 
         }
@@ -113,18 +123,23 @@ public class PhotoFun extends AppCompatActivity {
         }
     }
     private class imageTouchListener implements View.OnTouchListener {
+        private Paint myPaint;
+
+        public imageTouchListener () {
+            super();
+            myPaint = new Paint();
+            myPaint.setColor(Color.RED);
+            myPaint.setStrokeWidth(20);
+            myPaint.setStrokeCap(Paint.Cap.ROUND);
+        }
 
         private void startLine (SurfaceView surfaceView, int x, int y) {
             //surfaceView.setWillNotDraw(false);
-            Paint paint = new Paint();
-            paint.setColor(Color.RED);
-            paint.setStrokeWidth(20);
-            paint.setStrokeCap(Paint.Cap.ROUND);
             SurfaceHolder holder = surfaceView.getHolder();
             Surface surface = holder.getSurface();
             Canvas canvas = surface.lockCanvas(null);
-            canvas.drawBitmap(myOriginalBmp, 0, 0, null);
-            canvas.drawLine(x-30, y-30, x+30, y+30, paint);
+            canvas.drawBitmap(myNewBmp, 0, 0, null);
+            canvas.drawLine(x-30, y-30, x+30, y+30, myPaint);
             surface.unlockCanvasAndPost(canvas);
         }
 
