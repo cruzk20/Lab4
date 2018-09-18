@@ -1,8 +1,8 @@
 package edu.up.cs371.epp.photofunpattern;
 
 import android.graphics.Color;
-
 /**
+
  *  class GrayFilter changes the image manipulation behavior of its parent
  *  PhotoFilter to convert the image to gray scale.
  *
@@ -22,10 +22,9 @@ public class GrayFilter extends PhotoFilter {
     * @return a new Pixel in which each of the RGB components is their averaged
     * value
     */
-    public int transformPixel(int inPixel) {
-        int intensity = (Color.red(inPixel) + Color.green(inPixel) +
-                Color.blue(inPixel)) / 3;
-        return Color.argb(Color.alpha(inPixel), intensity,intensity,intensity);
+    public int transformPixel(int p0, int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8) {
+        int outpixel = (p0 + p1 + p2 + p3 + p4 + p4 + p5 + p6 + p7 + p8)/10;
+        return p4;
     }
 
 }
