@@ -49,6 +49,10 @@ public class PhotoFun extends AppCompatActivity {
                 (Button) findViewById(R.id.brightnessFilterButton);
         brightnessFilterButton.setOnClickListener
                 (new brightnessFilterButtonListener());
+        Button westEdgeFilterButton =
+                (Button) findViewById(R.id.westEdgeFilterButton);
+        westEdgeFilterButton.setOnClickListener
+                (new westEdgeFilterButtonListener());
     }
 
     /*
@@ -74,5 +78,13 @@ public class PhotoFun extends AppCompatActivity {
             myNewImageView.setImageBitmap(filter.apply(myOriginalBmp));
         }
     }
+    private class westEdgeFilterButtonListener
+            implements View.OnClickListener {
+        public void onClick(View button) {
+            WestEdgeFilter filter = new WestEdgeFilter();
+            myNewImageView.setImageBitmap(filter.apply(myOriginalBmp));
+        }
+    }
+
 }
 
