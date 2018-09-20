@@ -53,19 +53,18 @@ public abstract class PhotoFilter {
 
         Bitmap newBmp = Bitmap.createBitmap(width, height, inBmp.getConfig());
 
-        for (int w = 1; w < width-1; w++) {
-            for (int h = 1; h < height-1; h++) {
-                int p0= inBmp.getPixel(w-1,h-1);
-                int p1= inBmp.getPixel(w,h-1);
-                int p2= inBmp.getPixel(w+1,h);
-                int p3= inBmp.getPixel(w-1,h);
-                int p4= inBmp.getPixel(w,h);
-                int p5= inBmp.getPixel(w+1,h);
-                int p6= inBmp.getPixel(w-1,h+1);
-                int p7= inBmp.getPixel(w,h+1);
-                int p8= inBmp.getPixel(w+1,h+1);
-
-                int outPixel = transformPixel(p0,p1,p2,p3,p4,p5,p6,p7,p8);
+        for (int w = 0; w < width-2; w++) {
+            for (int h = 0; h < height-2; h++) {
+                int p0 = inBmp.getPixel(w,h);
+                int p1 = inBmp.getPixel(w+1,h);
+                int p2 = inBmp.getPixel(w+2,h);
+                int p3 = inBmp.getPixel(w,h+1);
+                int p4 = inBmp.getPixel(w+1,h+1);
+                int p5 = inBmp.getPixel(w+2,h+1);
+                int p6 = inBmp.getPixel(w,h+2);
+                int p7 = inBmp.getPixel(w+1,h+2);
+                int p8 = inBmp.getPixel(w+2,h+2);
+                int outPixel = transformPixel(p0, p1, p2, p3, p4, p5, p6, p7, p8);
                 newBmp.setPixel(w, h, outPixel);
             }
         }
